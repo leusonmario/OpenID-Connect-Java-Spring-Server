@@ -1,1 +1,25 @@
+
+sudo: required
 language: java
+
+jdk:
+  - oraclejdk8
+
+script:
+  - mvn clean cobertura:cobertura -Dtest=TestIdTokenHashUtils#getAccessTokenHash512 -DfailIfNoTests=false
+
+before_deploy:
+- tar -zcvf coverage-result.tar.gz /home/travis/build/leusonmario/OpenID-Connect-Java-Spring-Server/target/site/cobertura
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "YJ0mMbHQmhhnXrLpxwHG10Qqj21SslF5opClMpnFsfu/gLc4KnTmYPOT/pXkpC5Sn1Ow0NKuAeGOb+mnJT7GoYO+JaN4kEoqP/dl0L0NomO9QfroSjoatdHDRmo9/xEsAKg98t8xMqTuqCGBPTMtx9oHhTH5MQXt+2w7opPcrXWJUyEHjUPG2bE10uGLL9mYwTzl9uZnQbiIouc917roqsownDZxFh1cy3f3dEWKlQU6nfNpLNtIbxeg+pfhOJahQtb/6E236/snMewqBPXJB5/b2LyAs9zRYwmRQw778b1ywloMrsf/n4m/NRZt+eWW+v1caxt1mi8QnhLJqFZGOYa346PU3raSThrc8K6csrDNsv1209Qa73mN29/Nu+e0lXD25HZh7hRK5nLA1Gsu/uwcapkfXsVv+u8XGfc8PuclM3qTMWJiWyvXougIfpEU0EUwQFBadDQ0YTj9HtkegM/KUVXdK2lvDJaDqa734tfXl/v07PDYyDAzCYuzlwLQiDcl+b1XsE1oeQtGv1tbxoAvJ+kDvplVV3/9E+xrL+6Zw5JXDv9bs6vVglVkA7KfWfAjm4j7Pip2KCLG1CcCdGStSWc5ZyPXQPBLeHjQEA6lSezntpncZaSvGQBg9zFJFRYgZTqJt6j2F42iqWGnI+IHLClXVZVqJjg83GnQcsU="
+
+
+  file: coverage-result.tar.gz
+  file_glob: true
+  overwrite: true
+  skip_cleanup: true
+  on:
+    tags: true
